@@ -1,40 +1,51 @@
-🇧🇷 Português | 🇺🇸 [English](#english)
+# STM32 Inversor — DAC + DMA Senoidal
 
-# stm32-inversor
-
-Controle de inversor trifásico com geração senoidal via DAC + DMA no STM32F4xx.
-
-## Periféricos
-
-| Periférico | Função |
-|------------|--------|
-| DAC ch1+ch2 + DMA | Geração senoidal (128 pontos, 12 bits) |
-| TIM6 / TIM7 | Trigger dos canais DAC |
-| USART2 | Debug serial |
-
-## IDE · Ferramenta
-
-Atollic TrueSTUDIO 9.3 / STM32CubeIDE
-Centro Tecnológico Liberato — Novo Hamburgo/RS
+🇧🇷 **Português** | 🇺🇸 [English](#english)
 
 ---
 
-<a name="english"></a>
-🇧🇷 [Português](#) | 🇺🇸 English
+## Português
 
-# stm32-inversor
+Geração de onda senoidal por DAC com DMA em STM32F4xx, usando tabela LUT de 128 pontos acionada por timers.
 
-Three-phase inverter control with sinusoidal generation via DAC + DMA on STM32F4xx.
+### O que faz
+- Gera onda senoidal contínua via **DAC + DMA** sem uso da CPU
+- Tabela LUT de **128 pontos** calculada em ponto flutuante
+- **TIM6** e **TIM7** fornecem o trigger periódico para o DMA
+- Frequência configurável pelo prescaler dos timers
 
-## Peripherals
+### Arquitetura
+```
+TIM6/TIM7 trigger → DMA → DAC → PA4/PA5 (saída analógica)
+LUT[128] = sin(2π·n/128) escalado para 12 bits
+```
 
-| Peripheral | Function |
-|------------|----------|
-| DAC ch1+ch2 + DMA | Sine generation (128-point LUT, 12-bit) |
-| TIM6 / TIM7 | DAC channel triggers |
-| USART2 | Serial debug |
+### Parâmetros
+- Resolução DAC: **12 bits** (0–4095)
+- Pontos por ciclo: **128**
+- Trigger: TIM6 (canal 1) / TIM7 (canal 2)
+- Microcontrolador: STM32F4xx
 
-## IDE
+---
 
-Atollic TrueSTUDIO 9.3 / STM32CubeIDE
-Centro Tecnológico Liberato — Novo Hamburgo/RS, Brazil
+## English
+
+Sine wave generation using DAC + DMA on STM32F4xx, with a 128-point LUT triggered by hardware timers.
+
+### What it does
+- Generates continuous sine wave via **DAC + DMA** without CPU overhead
+- **128-point** LUT computed in floating point
+- **TIM6** and **TIM7** provide periodic DMA triggers
+- Frequency configurable via timer prescaler
+
+### Architecture
+```
+TIM6/TIM7 trigger → DMA → DAC → PA4/PA5 (analog output)
+LUT[128] = sin(2π·n/128) scaled to 12 bits
+```
+
+### Parameters
+- DAC resolution: **12 bits** (0–4095)
+- Samples per cycle: **128**
+- Trigger: TIM6 (ch1) / TIM7 (ch2)
+- MCU: STM32F4xx
